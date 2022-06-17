@@ -4,20 +4,43 @@ import heapq
 class Solution:
     def minCostConnectPoints(self, points: List[List[int]]) -> int:
         n = len(points)
+        weights = 0
+        heap = [(0, 0)]
+        in_mst = [False] * n
+        nodes = 0
+        while nodes < n:
+            weight, curr_node = heapq.heappop(heap)
+            if in_mst(curr_node):
+                continue
+            in_mst[curr_node] = True
+            weights += weight
+            nodes += 1
+            for next_node in range(n):
+                if not in_mst(next_node):
+                    next_weight = abs(points[curr_node][0] - points[curr_node][1]) + abs(
+                        points[curr_node][0] - points[next_node][1])
+                    heapq.heappush(next_weight, next_node)
+        return weights
+
+'''
+ def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        n = len(points)
         heap = [(0, 0)]  # min heap
         mst_cost = 0
         edges_used = 0
         in_mst = [False] * n
         while edges_used < n:
             weight, curr_node = heapq.heappop(heap)
-            if in_mst(curr_node):
+            if in_mst[curr_node]:
                 continue
-            mst_cost[curr_node]+=weight
+
             in_mst[curr_node] = True
             edges_used += 1
+            mst_cost+=weight
             for next_node in range(n):
-                if not in_mst(next_node):
-                    next_weight = abs(points[curr_node][0] - points[next_node][0]) + \
+                if not in_mst[next_node]:
+                   next_weight = abs(points[curr_node][0] - points[next_node][0]) + \
                                   abs(points[curr_node][1] - points[next_node][1])
-                    heapq.heappush(heap,(next_weight,next_node))
+                   heapq.heappush(heap,(next_weight,next_node))
         return mst_cost
+ '''
